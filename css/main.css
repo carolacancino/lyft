@@ -1,3 +1,4 @@
+/*pimer html*/
 .banner{
 	background-image: url(../images/lyftpresskit02.jpg);
 	max-width: 100%;
@@ -12,7 +13,7 @@
     margin: auto;
     top: 80%;
 }
-.btn{
+.btn-pri{
 	background: transparent;
 	width: 25%;
 	height: 85px;
@@ -20,15 +21,44 @@
 	font-size: 20px;
 	margin:8px;
 }
-.btn:hover{
-	background-color:#FA0AC4;
+.btn-pri:hover{
+	background: -webkit-linear-gradient(#7500BF , #E000BF );
+   background: -o-linear-gradient(#7500BF , #E000BF );
+   background: linear-gradient(#7500BF , #E000BF );
 	opacity: 0.8;
 	color:white;
-	border-color: #FA0AC4;
+	border-color: #7500BF;
+}
+.flecha-iz{
+	font-size: 28px;
+}
+.logo{
+	width: 120px;
+	height: 100px;
+	margin-top: 20px;
+}
+/*segundo html*/
+.ico-chile{
+	width:20px;
+	height: 15px; 
+}
+.titule-1{
+	display: inline;
+}
+.p{
+	color:gray;
+	padding-top: 20px;
 }
 
-
-.logo{
-	width: 100px;
-	height: 80px;
+.pais{
+	margin-left:100px;
+}
+.next{
+	background-color: #FA0AC4;
+	color: white;
+	height: 100px;
+    margin-top: 200px;
+}
+.next-titulo{
+	padding-top: 30px;
 }
