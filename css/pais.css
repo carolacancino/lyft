@@ -1,0 +1,54 @@
+/*tercera parte*/
+.p-tree{
+	background-color: #E8E7EC;
+	padding: 5px;
+}
+.cerrar{
+	color: gray;
+	font-size: 15px;
+}
+/*banderas*/
+.div-banderas{
+	border-bottom: 1px solid #9e9e9e;
+	width: 300px;
+	margin-left: 10px;
+	margin-top: 10px;
+	padding: 5px;
+}
+.caret{
+	color: #9e9e9e;;
+}
+.bandera{
+	width: 30px;
+	height: 20px;
+	padding: 2px;
+	margin-right: 10px;
+}
+/*br*/
+.divider{
+	border-bottom: 1px solid #EFF1F5;
+	margin-bottom: 15px;
+}
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.linea{
+border-bottom: 1px solid #ABA9A9;
+}
+#paises li {
+	list-style: none;
+	display: block;
+	margin-bottom: 7px;
+}
+#paises li a {
+	display: block;
+	text-decoration: none;
+}
+/*#paises li a:hover {
+	background-color: #bc1339;
+}*/
+#paises img {
+	display: inline-block;
+	width: 20px;
+}	

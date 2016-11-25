@@ -1,3 +1,7 @@
+*{
+	margin:0px;
+	padding:0px;
+}
 /*pimer html*/
 .banner{
 	background-image: url(../images/lyftpresskit02.jpg);
@@ -197,6 +201,13 @@ border-bottom: 1px solid #ABA9A9;
 	width: 45px;
     height: 35px;
 }
+.defaul-small{
+		width: 100px;
+		height: 100px;
+		border-radius: 100px;
+		border: 1px #CEC8C8 double;
+		padding: 5px;
+}
 .pickup{
 	background-color: #CDC4E3;
     border-radius: 10px;
@@ -235,49 +246,106 @@ body{
 	width: 350px;
 }
 /*menu*/
-header{
-	width: 100%
+
+* {
+	margin:0;
+	padding:0;
 }
-header nav{
-	width: 80%
+
+header {
+	width:100%;
+}
+
+header nav {
+	width:90%;
 	max-width:1000px;
-	margin:20px;
+	margin:20px auto;
 }
-.menu_bar{
-	display: none;
+
+.menu_bar {
+	display:none;
 }
-header nav ul{
-	overflow: hidden;
-	list-style: none;
+
+header nav ul {
+	overflow:hidden;
+	list-style:none;
 }
-header nav ul li{
-	float: left;
+
+header nav ul li {
+	float:left;
 }
-header nav ul li a{
+
+header nav ul li a {
 	color: black;
 	padding:20px;
-display: block;
-	text-decoration: none
+	display:block;
+	text-decoration:none;
 }
-header nav ul li i{
-	margin-right: 10px;
+
+header nav ul li i {
+	margin-right:10px;
 }
-header nav ul li a:hover{
-background-color: #FA0AC4;
+
+header nav ul li a:hover {
+	color:#FA0AC4;
+	text-decoration: none;
 }
-section{
-	padding: 20px;;
+
+section {
+	padding:20px;
 }
-@media screen  and (max-width: 800px){
-	header nav{
-		width: 60%;
-		height: 100%;
-		margin:0px;
+
+@media screen and (max-width:800px ) {
+	header nav {
+		width:60%;
+		height:100%;
+		left:-100%;
+		margin:10;
 		position: fixed;
 	}
-	header nav ul li{
-		display: block;
-		float: none;
+
+	header nav ul li {
+		display:block;
+		float:none;
 		border-bottom:1px solid rgb(250, 10, 196);
+	}
+
+	.menu_bar {
+		display:block;
+		width:60%;
+	}
+
+	.menu_bar .bt-menu {
+		display:block;
+		padding:20px;
+		color:#fff;
+		text-decoration:none;
+		font-weight: bold;
+		font-size:60px;
+		-webkit-box-sizing:border-box;
+		-moz-box-sizing:border-box;
+		box-sizing:border-box;
+	}
+
+	.menu_bar span {
+		float:right;
+		font-size:40px;
+	}
+	.menu-span{
+		font-size: 18px;
+	}
+	.view{
+		color: gray;
+		font-size: 15px;
+		text-align: center;
+		margin-top: -10px;
+	}
+	.defaul-small{
+		width: 50px;
+		height: 50px;
+		border-radius: 100px;
+		border: 1px #CEC8C8 double;
+		padding: 5px;
+			
 	}
 }

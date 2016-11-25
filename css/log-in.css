@@ -1,0 +1,42 @@
+/*br*/
+.divider{
+	border-bottom: 1px solid #EFF1F5;
+	margin-bottom: 15px;
+}
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+.linea{
+border-bottom: 1px solid #ABA9A9;
+}
+/*login*/
+.next-boton:hover{
+	color: white;
+    text-decoration: none;
+}
+.next-boton{
+	color: white;
+}
+.next{
+	background-color: #FA0AC4;
+	color: white;
+	height: 100px;
+    margin-top: 75px;
+}
+.next-titulo{
+	padding: 12px;
+}
+.form-control{
+	width: 120px;
+	display: inline-block;
+}
+.flecha-iz{
+	font-size: 28px;
+	color: gray;
+	top: 28px;
+	left: 15px;
+}
+.input-group {
+    margin-bottom: 10px;
+}

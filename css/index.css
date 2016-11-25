@@ -1,0 +1,50 @@
+*{
+	margin:0px;
+	padding:0px;
+}
+/*pimer html*/
+.banner{
+	background-image: url(../images/lyftpresskit02.jpg);
+	max-width: 100%;
+	background-position: center;
+	background-repeat: no-repeat;
+	background-size: cover;
+	height: 100vh;
+}
+
+.boton{
+	width: 100%;
+	position: fixed;
+    margin: auto;
+    top: 80%;
+
+}
+.btn-pri{
+	background: transparent;
+	width: 138px;
+	height: 50px;
+	border-color: white;
+	font-size: 20px;
+	margin-right: 18px;
+	margin-left:-5px;
+	border-radius: 5px;
+}
+.btn-pri:hover{
+	background: -webkit-linear-gradient(#7500BF , #E000BF );
+   background: -o-linear-gradient(#7500BF , #E000BF );
+   background: linear-gradient(#7500BF , #E000BF );
+	opacity: 0.8;
+	color:white;
+	border-color: #7500BF;
+}
+.flecha-iz{
+	font-size: 28px;
+	color: gray;
+	top: 28px;
+	left: 15px;
+}
+.logo{
+	width: 120px;
+	height: 100px;
+	margin-top: 20px;
+}
