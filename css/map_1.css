@@ -1,7 +1,9 @@
 .logo-small{
 	width: 90px;
 	height: 70px;
+
 }
+
 .defaul-small{
 	width: 100px;
 	height: 100px;
@@ -27,6 +29,7 @@
 
 header {
 	width:100%;
+
 }
 
 header nav {
@@ -78,6 +81,10 @@ section {
 		height:100%;
 		left:-100%;
 		margin:10;
+		/*position: fixed;
+		z-index: 1;*/
+	}
+	nav{
 		position: fixed;
 		z-index: 1;
 	}
@@ -126,7 +133,9 @@ section {
 		padding: 5px;
 
 	}
+	
 }
+
 .present-img{
 	width: 30px;	
 	border: 1px #CEC8C8;
@@ -139,4 +148,8 @@ footer {
 	width: 100%;
 	position: absolute;
     bottom: 5%;
+}
+/*nav{
+ z-index: 2;
+
 }
