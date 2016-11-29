@@ -1,7 +1,4 @@
-*{
-	margin:0px;
-	padding:0px;
-}
+
 /*pimer html*/
 .banner{
 	background-image: url(../images/lyftpresskit02.jpg);
@@ -25,8 +22,7 @@
 	height: 50px;
 	border-color: white;
 	font-size: 20px;
-	margin-right: 18px;
-	margin-left:-5px;
+	margin-right: 10px;
 	border-radius: 5px;
 }
 .btn-pri:hover{
