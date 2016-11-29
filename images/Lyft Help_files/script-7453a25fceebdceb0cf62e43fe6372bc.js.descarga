@@ -1,0 +1,583 @@
+window.__insp = window.__insp || [];
+__insp.push(['wid', 753232201]);
+(function() {
+function ldinsp(){if(typeof window.__inspld != "undefined") return; window.__inspld = 1; var insp = document.createElement('script'); insp.type = 'text/javascript'; insp.async = true; insp.id = "inspsync"; insp.src = ('https:' == document.location.protocol ? 'https' : 'http') + '://cdn.inspectlet.com/inspectlet.js'; var x = document.getElementsByTagName('script')[0]; x.parentNode.insertBefore(insp, x); };
+setTimeout(ldinsp, 500); document.readyState != "complete" ? (window.attachEvent ? window.attachEvent('onload', ldinsp) : window.addEventListener('load', ldinsp, false)) : ldinsp();
+})();
+
+/**
+ * authData is a promise that resolves with user info
+ * if user is logged in on lyft.com.
+ */
+var authData = getLyftAuthData();
+
+/**
+ * Send Redshift analytics events via www2.
+ * Must be whitelisted on the server.
+ */
+function trackEvent(eventName, props) {
+  props.event_name = eventName;
+  $.ajax({
+    type: 'GET',
+    url: 'https://www.lyft.com/api/track',
+    xhrFields: {withCredentials: true},
+    data: props
+  });
+}
+
+/**
+ * Fetch and return user data from lyft.com if user is logged in.
+ */
+function getLyftAuthData() {
+  return $.ajax({
+    type: 'GET',
+    url: 'https://www.lyft.com/api/auth',
+    crossDomain: true,
+    xhrFields: {withCredentials: true},
+    timeout: 10000
+  });
+}
+
+/**
+ * Take list of user roles and return the highest-priority match.
+ * Priority: 1. Driver 2. Applicant 3. Passenger and 4. Carpool user.
+ */
+function getRole(roles) {
+  var matchedRoles = [];
+  roles.forEach(function(role) {
+    if (role.toLowerCase().indexOf('carpool') > -1) {
+      matchedRoles.push('carpool_user');
+    }
+    else if (role === 'passenger') {
+      matchedRoles.push('passenger');
+    }
+    // Intentionally also matches "deactivatedDriver".
+    else if (role.toLowerCase().indexOf('driver') > -1) {
+      matchedRoles.push('driver');
+    }
+    else if (role.toLowerCase().indexOf('applicant') > -1) {
+      matchedRoles.push('applicant');
+    }
+  });
+  if (matchedRoles.indexOf('driver') > -1) {
+    return 'driver';
+  }
+  if (matchedRoles.indexOf('applicant') > -1) {
+    return 'applicant';
+  }
+  if (matchedRoles.indexOf('passenger') > -1) {
+    return 'passenger';
+  }
+  if (matchedRoles.indexOf('carpool_user') > -1) {
+    return 'carpool_user';
+  }
+}
+
+/**
+ * Fill and hide lyft_id, name, email, and phone if they can be retrieved from lyft.com.
+ * Prefill the "I am a..." select if user has only one role.
+ */
+function autoFillFormFromResponse(data) {
+  var lyftId, name, email, phone, role;
+  var logoutUrl = 'https://www.lyft.com/logout?next=' + window.location.href;
+  var logoutLink = $('<a></a>').text('Logout.').attr('href', logoutUrl);
+
+  if (data && data.hasOwnProperty('lyftId') && data.lyftId) {
+    lyftId = data.lyftId;
+    $('#request_custom_fields_28151518').val(lyftId).parent().hide();
+  }
+  if (data && data.hasOwnProperty('firstName') && data.firstName) {
+    name = data.firstName;
+  }
+  else if (data && data.hasOwnProperty('name') && data.name) {
+    name = data.name;
+  }
+  if (data && data.hasOwnProperty('email') && data.email) {
+    email = data.email;
+  }
+  if (data && data.hasOwnProperty('phone') && data.phone) {
+    phone = data.phone;
+    
+    // pre fill click to call phone number
+    $('*#clickToBeCalledNumber').val(phone);
+  }
+  if (data && data.hasOwnProperty('roles') && data.roles) {
+    role = getRole(data.roles);
+  }
+  if (name && email && phone) {
+    $('div.form').prepend($('<p></p>').text('Not ' + name + '? ').append(logoutLink));
+    $('#new-request-heading').text(name + ', how can we help you?');
+    $('#request_anonymous_requester_email').val(data.email).parent().hide();
+    $('#request_custom_fields_28853328').val(data.phone).parent().hide();
+  }
+  if (role) {
+    $('#request_custom_fields_27969517').val(role);
+  }
+  return $.when();
+}
+
+/**
+ * Personalize the new ticket submission form.
+ */
+function autoFillForm() {
+  authData.done(autoFillFormFromResponse)
+  .always(function() {
+    $('#new-request-form').show();
+    $('#loading').hide();
+  });
+}
+
+/**
+ * Return custom HTML for ST search results.
+ * Creates links with target="_blank" for more friendly redirection.
+ */
+function stCustomRenderFunction(document_type, item) {
+  var link = '<a href="' + item.url + '" target="_blank">' + item.title + '</a>';
+  return '<p class="title">' + link + '</p>';
+};
+
+/**
+ * Replace Zendesk contextual help with ST search.
+ */
+function enableSwiftypeOnNewTicketSubject() {
+  $("#request_subject").swiftype({
+      engineKey: "eJ8GrWC2n1-zzDX1WTjd",
+      resultLimit: 3,
+        renderFunction: stCustomRenderFunction,
+      onComplete: function() {}  // disable default behavior
+  });
+}
+
+/**
+ * Hit the driver_routes endpoint on lyft.com for a given Monday.
+ * @returns {jQuery Promise}
+ */
+function getDriverRidesForDate(isoDateString) {
+  return $.ajax({
+    type: 'GET',
+    url: 'https://www.lyft.com/api/driver_routes/' + isoDateString,
+    xhrFields: {withCredentials: true}
+  });
+}
+
+/**
+ * Hit the help_info endpoint on lyft.com for deflection content
+ * @returns {jQuery Promise}
+ */
+function getDeflectionContent() {
+  return $.ajax({
+    type: 'GET',
+    url: 'https://www.lyft.com/api/help/help_info/'
+  });
+}
+
+/**
+ * Return a YYYY-MM-DD date string for the Monday before fromDate.
+ * The api/driver_routes endpoint on lyft.com only accepts Mondays.
+ * @param {string | Number} fromDate - ISO string or epoch integer.
+ * @returns {String} - YYYY-MM-DD formatted date string
+ */
+function getPreviousMonday(fromDate) {
+    fromDate = fromDate || Date();
+    var dayMillisecs = 24 * 60 * 60 * 1000;
+    var d = new Date(new Date(fromDate).toISOString().slice(0, 10));
+    var dayDiff = d.getDay() === 0 ? 7 : 0;
+    var mondayMillisecs = d.getTime() - (d.getDay() + dayDiff) * dayMillisecs;
+    return new Date(mondayMillisecs).toISOString().slice(0, 10);
+}
+
+/**
+ * Get most recent 10 driver rides since Monday before last.
+ * Resolves to an empty array if user is not a driver.
+ * @returns {jQuery Promise}
+ */
+function getRecentDriverRides(data) {
+  var lastMonday = getPreviousMonday();
+  var mondayBeforeLast = getPreviousMonday(lastMonday);
+  var roles = data && data.hasOwnProperty('roles') && data.roles;
+  var promise = $.Deferred();
+
+  if (roles && getRole(roles) === 'driver') {
+    $.when(getDriverRidesForDate(lastMonday),
+           getDriverRidesForDate(mondayBeforeLast))
+
+    .done(function(res1, res2) {
+      var rides = [];
+      var thisWk = res1[0].days || [];
+      var lastWk = res2[0].days || [];
+
+      thisWk.concat(lastWk).forEach(function(day) {
+        (day.routes || []).forEach(function(ride) {
+          if (ride.routeStatus !== 'lapsed') {
+            rides.push(ride);
+          }
+          if (rides.length === 10) {
+            promise.resolve(rides);
+            return;
+          }
+        });
+      });
+      promise.resolve(rides);
+    })
+
+    .fail(promise.reject);
+  } else {
+    promise.resolve([]);
+  }
+  return promise.promise();
+}
+
+/**
+ * Set listener on "What was your question about" selector.
+ * Show ride selector on eligible issues.
+ * @param {element} - ride selector
+ */
+function showRideSelectorForIssueTypes(el) {
+  var issues = ['safety_concern_driver', 'a_question_about_ride'];
+  $('#request_custom_fields_28917217').on('change', function() {
+    if (issues.indexOf(this.value) > -1) {
+      el.show();
+    } else {
+      el.hide();
+    }
+  });
+}
+
+/**
+ * Update the hidden ride_id field on the ticket with the
+ * ride chosen in the ride selector. Also set ride_url.
+ */
+function setRideIdFromRideSelector(rideSelect) {
+  var routeIdField = $('#request_custom_fields_31730488');
+  var rideUrlField = $('#request_custom_fields_27993998');
+  rideSelect.on('change', function() {
+    var routeId = rideSelect.val();
+    var rideUrl = 'https://tom.lyft.net/routes/route/' + routeId;
+    routeIdField.val(routeId);
+    rideUrlField.val(rideUrl);
+  });
+}
+
+/**
+ * Call to enable the ride selector dropdown.
+ * Shown conditionally to drivers for specific issue types.
+ */
+function insertRideSelectorForDrivers() {
+  authData.then(getRecentDriverRides)
+  .done(function(rides) {
+    if (!rides.length) {
+      return;
+    }
+
+    var div = $('<div></div>')
+      .addClass('form-field string');
+    var select = $('<select></select>').css('max-width', '100%')
+      .addClass('nesty-input radius border-moonstone');
+    var label = $('<label></label>')
+      .text('Please select the relevant ride');
+    var defaultOpt = $('<option></option>');
+
+    div.hide();
+    div.append(label);
+    div.append(select);
+    select.append(defaultOpt);
+
+    rides.forEach(function(ride) {
+      var text = window.moment(ride.startTime * 1000)
+        .format('ddd MMM D[,] YYYY [at] h:mma [(]') +
+        Math.ceil(ride.duration / 60) + 'min ride)';
+      var opt = $('<option></option>')
+        .text(text).val(ride.routeId);
+      select.append(opt);
+    });
+
+    div.insertAfter('.request_custom_fields_28917217');
+
+    showRideSelectorForIssueTypes(div);
+    setRideIdFromRideSelector(select);
+  });
+}
+
+/**
+ * Track clicks on "Contact Support" link in Google Analytics.
+ * So that we know which articles users visit before submitting.
+ */
+function trackNewRequestClicks() {
+  var btn = $('#new-request-btn');
+  btn.on('click', function(e) {
+    var path = window.location.pathname;
+    ga(
+      'send',
+      'event',
+      'Go To New Request Page',
+      'To To New Request Page From',
+      path
+		);
+  });
+}
+
+$(document).ready(function() {
+  'use strict';
+  autoFillForm();
+  enableSwiftypeOnNewTicketSubject();
+  insertRideSelectorForDrivers();
+  
+  if (HelpCenter && HelpCenter.hasOwnProperty('user') && HelpCenter.user.hasOwnProperty('role')) {
+    if (HelpCenter.user.role == 'agent' || HelpCenter.user.role == 'manager') {
+      $('#lyft-search-box').removeClass('st-lyft-search-input');
+      $('#st-lyft-search-container').hide();
+      $('#zd-lyft-search-container').show();
+    }
+  }
+  
+  // social share popups
+  $(".share a").click(function(e) {
+    e.preventDefault();
+    window.open(this.href, "", "height = 500, width = 500");
+  });
+
+  // toggle the share dropdown in communities
+  $(".share-label").on("click", function(e) {
+    e.stopPropagation();
+    var isSelected = this.getAttribute("aria-selected") == "true";
+    this.setAttribute("aria-selected", !isSelected);
+    $(".share-label").not(this).attr("aria-selected", "false");
+  });
+
+  $(document).on("click", function() {
+    $(".share-label").attr("aria-selected", "false");
+  });
+
+  // show form controls when the textarea receives focus or backbutton is used and value exists
+  var $answerbodyTextarea = $(".answer-body textarea"),
+      $answerFormControls = $(".answer-form-controls"),
+      $commentContainerTextarea = $(".comment-container textarea"),
+      $commentContainerFormControls = $(".comment-form-controls");
+
+  $answerbodyTextarea.one("focus", function() {
+    $answerFormControls.show();
+  });
+
+  $commentContainerTextarea.one("focus", function() {
+    $commentContainerFormControls.show();
+  });
+
+  if ($commentContainerTextarea.val() !== "") {
+    $commentContainerFormControls.show();
+  }
+
+  if ($answerbodyTextarea.val() !== "") {
+    $answerFormControls.show();
+  }
+
+  // Submit requests filter form in the request list page
+  $("#request-status-select, #request-organization-select")
+    .on("change", function() {
+      search();
+    });
+
+  // Submit requests filter form in the request list page
+  $("#quick-search").on("keypress", function(e) {
+    if (e.which === 13) {
+      search();
+    }
+  });
+
+  function search() {
+    window.location.search = $.param({
+      query: $("#quick-search").val(),
+      status: $("#request-status-select").val(),
+      organization_id: $("#request-organization-select").val()
+    });
+  }
+
+  // Submit organization form in the request page
+  $("#request-organization select").on("change", function() {
+    this.form.submit();
+  });
+  
+  // grabbed from lyft.com
+  // opaque nav
+  
+  function setupNav() {
+    
+    var $lyftComNav = $("#lyft-com-nav");
+    var hiddenDupElement =
+        $lyftComNav.clone()
+            .attr('aria-hidden', 'true')
+            .css({
+                visibility: 'hidden',
+                'pointer-events': 'none',
+                position: 'relative',
+                'overflow-x': 'hidden'
+            });
+
+    $lyftComNav.after(hiddenDupElement);
+    var $lyftComNavHamburgerBtn = $("#lyft-com-nav-hamburger-btn");
+
+    $lyftComNavHamburgerBtn.click(function() {
+      $("body").toggleClass('lyft-com-navigation-main-wrapper-opened');
+      $lyftComNavHamburgerBtn.toggleClass('lyft-com-navigation__menu-btn-opened');
+    });
+
+    var $lyftComNavSubnavBtn = $(".lyft-com-navigation__subnav-button");
+    var $lyftComNavSections = $('#lyft-com-nav-sections');
+    var $lyftComSubnav = $('.lyft-com-navigation__subnav');
+    
+    function toggleSubnav(shouldShow) {
+      return function($event) {
+        if (shouldShow !== undefined) {
+          $lyftComNavSubnavBtn.toggleClass('lyft-com-navigation__subnav-button-open', shouldShow);
+          $lyftComSubnav.toggleClass('lyft-com-navigation__subnav--hide', !shouldShow);
+        } else {
+          $lyftComNavSubnavBtn.toggleClass('lyft-com-navigation__subnav-button-open');
+          $lyftComSubnav.toggleClass('lyft-com-navigation__subnav--hide');
+        }
+        
+        $event.target.blur();
+      };
+    }
+    
+    $lyftComNavSubnavBtn.on('mouseover', toggleSubnav(true));
+    $lyftComNavSubnavBtn.click(toggleSubnav());
+    $lyftComNavSections.on('mouseleave', toggleSubnav(false));
+  }
+  
+  function setupRequestForm() {
+    var customFields = [
+      $('.request_custom_fields_28917747'),
+      $('.request_custom_fields_28917217'),
+      $('.request_custom_fields_28862067'),
+      $('.request_custom_fields_28855868'),
+      $('.request_custom_fields_28855638'),
+      $('.request_custom_fields_28169227'),
+      $('.request_custom_fields_28177678'),
+      $('.request_custom_fields_28169477'),
+      $('.request_custom_fields_28856698'),
+      $('.request_custom_fields_28863437'),
+      $('.request_custom_fields_28863977'),
+      $('.request_custom_fields_28855718'),
+      $('.request_custom_fields_28874777'),
+      $('.request_custom_fields_28259177'),
+      $('.request_custom_fields_28855937'),
+      $('.request_custom_fields_28950708'),
+      $('.request_custom_fields_28994187'),
+      $('.request_custom_fields_28996707'),
+      $('.request_custom_fields_28953138'),
+      $('.request_custom_fields_28994087'),
+      $('.request_custom_fields_31368558'),
+      $('.request_custom_fields_36345148'),
+      $('.request_description'),
+    ];
+    
+    var $formBeginning = $('.request_custom_fields_27969517');
+    for (var i = customFields.length-1; i >= 0; i--) {
+        var $customField = customFields[i];
+      $customField.insertAfter($formBeginning);
+    }
+    
+    $('.nesty-panel').addClass('radius border shadow border-moonstone');
+    
+    $('.nesty-input').addClass('radius border-moonstone');
+    $('.form-field input, .form-field textarea').addClass('radius border-moonstone');
+    
+    $('#new_request [type="submit"]').addClass('btn btn-primary');
+    
+    // Hide route_id and ride_url field
+    $('.request_custom_fields_31730488').hide();
+    $('.request_custom_fields_27993998').hide();
+    
+    // Hide lyft_id field
+    $('.request_custom_fields_28151518').hide();
+  }
+  
+  function setupRequestFormAnswers() {
+    $('.request-form-answer').insertBefore($('#new_request .form-field.request_description'));
+    
+    $('#new_request .form-field > input[type="hidden"]').on('change', function() {
+      var issueType = $(this).val();
+      $('.request-form-answer').hide();
+      $('.request-form-answer[data-issue-type="' + issueType +'"]').show();
+    });
+  }
+  
+  setupNav();
+  setupRequestForm();
+  setupRequestFormAnswers();
+  
+  function articlePage() {
+    $('.related-articles h3').addClass('text-base m-b-s');
+  }
+  
+  articlePage();
+  
+  /* Move notification below hero image */
+  function moveNotification() {
+    $('.notification').insertAfter('.bg-cover');
+  }
+  
+  moveNotification();
+  
+  /* On New Request page, change form text */
+  function changeRequestText() {
+    $('h1:contains("Submit a request")').text('How can we help you?');
+  }
+  
+  changeRequestText();
+  trackEvent('www_page_view', {page: window.location.href});
+  trackNewRequestClicks();
+  
+  // click to be called
+  $('*#clickToBeCalled').html(
+    '<div style="display: none"><p id="clickToBeCalledText">Please enter the phone number where we can currently reach you</p><input type="tel" id="clickToBeCalledNumber" placeholder="phone number"></div><p id="clickToBeCalledStatus"></p><a class="btn btn-primary" id="clickToBeCalledBtn">Call Me</a>'
+  );
+
+  $('*#clickToBeCalledBtn').click(function() {
+    var self = $(this).parent();
+    var phoneNumber = self.find('#clickToBeCalledNumber').val();
+
+    if (self.find('#clickToBeCalledNumber').parent().is(':visible') &&(phoneNumber != '')) {
+      self.find('#clickToBeCalledBtn').hide();
+      self.find('#clickToBeCalledStatus').removeAttr("style");
+      self.find('#clickToBeCalledStatus').html('Loading...');
+      self.find('#clickToBeCalledText').removeAttr("style");
+      self.find('#clickToBeCalledNumber').removeAttr("style");
+      self.addClass('activeCTBC');
+
+      $.ajax({
+        url: 'https://www.lyft.com/api/help/userphonecall',
+        type: 'post',
+        data: JSON.stringify({
+          'phone': phoneNumber
+        }),
+        contentType: "application/json; charset=utf-8",
+        dataType: 'json',
+        xhrFields: {withCredentials: true},
+        success: function() {
+          var self = $('*#clickToBeCalled.activeCTBC');
+          self.html('Grab your phone, we will call you in just a moment.');
+          self.removeClass('activeCTBC');
+        },
+        error: function() {
+          var self = $('*#clickToBeCalled.activeCTBC');
+          self.find('*#clickToBeCalledStatus').html('An error occurred. Try that one more time.');
+          self.find('#clickToBeCalledStatus').css('color', '#e60000');
+          self.find('#clickToBeCalledBtn').show();
+          self.removeClass('activeCTBC');
+        }
+      });
+    } else {
+      if (self.find('#clickToBeCalledNumber').parent().is(':visible')) {
+        self.find('#clickToBeCalledText').css('color', '#e60000');
+        self.find('#clickToBeCalledNumber').css('border-color', '#e60000');
+      } else {
+        self.find('#clickToBeCalledNumber').parent().show();
+      }
+    }
+  });
+
+  $('*#clickToBeCalled[data-replace-id]').each(function() {
+    var replaceId = $(this).attr('data-replace-id');
+    $('#'+replaceId).replaceWith( $(this) );
+  });
+});
