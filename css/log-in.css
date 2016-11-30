@@ -1,4 +1,4 @@
-/*br*/
+0/*br*/
 .divider{
 	border-bottom: 1px solid #EFF1F5;
 	margin-bottom: 15px;
@@ -31,15 +31,27 @@ border-bottom: 1px solid #ABA9A9;
 	width: 120px;
 	display: inline-block;
 }
-.flecha-iz{
-	font-size: 28px;
+.fa-angle-left{
 	color: gray;
-	top: 28px;
-	left: 15px;
+	text-orientation: none;
 }
+
 .input-group {
     margin-bottom: 10px;
 }
-.fa-arrow-left {
-	color: black;
+
+.alert-error{
+  -webkit-boxshadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -moz-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  -o-box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  background: gray;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  color: #fff;
+  display: none;
+  font-size: 15px;
+  margin-top: 12px;
+  margin-left: 157px;
+  padding: 7px;
+  position: absolute;
+  z-index: 30;
 }

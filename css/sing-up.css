@@ -7,7 +7,6 @@
 	color:gray;
 	padding-top: 20px;
 }
-
 .pais{
 	margin-left:100px;
 }
@@ -22,7 +21,10 @@
 	background-color: white;
 	border: 1px ;
 	display: inline-block;
-
+}
+.fa-angle-left{
+	color: gray;
+	text-orientation: none;
 }
 .next-boton:hover{
 	color: white;
@@ -43,12 +45,6 @@
 .form-control{
 	width: 120px;
 	display: inline-block;
-}
-.flecha-iz{
-	font-size: 28px;
-	color: gray;
-	top: 28px;
-	left: 15px;
 }
 /*br*/
 .divider{
@@ -85,4 +81,7 @@ border-bottom: 1px solid #ABA9A9;
     height: 26px;
     padding: 2px;
     margin-right: -5px;
+}
+.caret{
+	color: black;
 }

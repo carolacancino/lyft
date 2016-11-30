@@ -1,23 +1,30 @@
-function validateForm(){
-    
-    var letrasnormales = /^[A-Za-z\_\-\.\s\xF1\xD1]+$/;
+var expr = /^[a-zA-Z0-9_\.\-]+@[a-zA-Z0-9\-]+\.[a-zA-Z0-9\-\.]+$/;
+       
+        $(document).ready(function(){
+            
+            $("#next").click(function(){
+                
+                var nombre = $("#name").val();
+                var correo = $("#email").val();
+ 
+                
+                if(nombre == ""){
+                    $("#alert1").fadeIn("slow");
+                    return false;
+                }
 
-    function Nombre(){
-        
-        var Nombre =$("#name").val();
-        if(Nombre == null || Nombre.length == 0 || /^\s+$/.test(Nombre)) {
-            var mensaje = "Ingrese su nombre";
-            var span = $("#name").parent().append("<span>" + mensaje + "</span>");
-        }
-
-       else if(!letrasnormales.test(Nombre)){
-            var mensaje = "Ingrese solo letras";
-            var span = $("#name").parent().append("<span>" + mensaje + "</span>");
-        } 
-        else if (Nombre.charAt(0) != Nombre.charAt(0).toUpperCase()) {
-            var mensaje = "Debe comenzar con mayusculas";
-            var span = $("#name").parent().append("<span>" + mensaje + "</span>");
-        }
-        
-    }
-    Nombre();
+                else{
+                    $("#alert1").fadeOut();
+ 
+                    if(correo == "" || !expr.test(correo)){
+                        $("#alert2").fadeIn("slow");
+                        return false;
+                    }
+                    else{
+                        $("#alert2").fadeOut();
+ 
+                    }
+                }
+ 
+            });
+        });
