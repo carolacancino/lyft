@@ -97,13 +97,29 @@ section {
 	margin:-25px;
 }
 /*perfil*/
-.perfil-pic{
+/*.perfil-pic{
 	background-image: url(../images/profile-default.jpg);
 	height: 330px;
 	max-width: 100%;
 	background-position: center;
 	background-repeat: no-repeat;
 	background-size: cover;
+}*/
+.btn{
+	z-index: 3;
+    margin-top: 300px;
+    position: absolute;
+    margin-left: 82px;
+    width: 131px;
+    background-color: #E000BF;
+    border: none;
+}
+.cambio{
+	padding: 10px;
+}
+
+.name{
+	margin-top: -43px
 }
 .box-sky{
 	background-color: #D7E0E8;

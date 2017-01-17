@@ -1,0 +1,43 @@
+/* SIGNUP STYLES */
+.container-signup{
+	margin-top: 5%;
+}
+.arrow{
+	font-size: 40px;
+	cursor: pointer;
+	color: #000;
+}
+.input-phone{
+	margin-top: 4%;
+}
+.verify{
+	margin-top: -10%;
+	font-size: 12px;
+}
+.boton-bandera{
+	width: 100%;
+	height: 30px;
+	border-radius: 6px;
+	margin-top: 30%;
+	cursor: pointer;
+}
+.bandera-pais{
+	width: 40%;
+}
+.band{
+	color: #000;
+}
+.background-footer{
+	background-color: #FF05B8;
+	margin-top: -3%;
+}
+  body {
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+  }
+
+  main {
+    flex: 1 0 auto;
+  }
+     

@@ -20,23 +20,25 @@
       </div>
       <nav>
         <ul>
-          <li class="menu-span text-center"><a href="profile.html"><img class="defaul-small2 text-center" src="images/profile-default.jpg"><p>Carola</p>
-          </a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-map-marker" aria-hidden="true"></i>Home</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-gift" aria-hidden="true"></i>Free Rides</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-history" aria-hidden="true"></i>Ride history</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-credit-card" aria-hidden="true"></i>Payment</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-question" aria-hidden="true"></i>Help</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-cog" aria-hidden="true"></i>Settings</a></li>
-          <li class="menu-span"><a href="#"><i class="fa fa-cog" aria-hidden="true"></i>Sign up to drive</a></li>
+          <li class="menu-span"><a href="index.html"><i class="fa fa-map-marker" aria-hidden="true"></i>Home</a></li>
+          <li class="menu-span"><a href="free.html"><i class="fa fa-gift" aria-hidden="true"></i>Free Rides</a></li>
+          <li class="menu-span"><a href="ride-history.html"><i class="fa fa-history" aria-hidden="true"></i>Ride history</a></li>
+          <li class="menu-span"><a href="pay.html"><i class="fa fa-credit-card" aria-hidden="true"></i>Payment</a></li>
+          <li class="menu-span"><a href="help.html"><i class="fa fa-question" aria-hidden="true"></i>Help</a></li>
+          <li class="menu-span"><a href="settings.html"><i class="fa fa-cog" aria-hidden="true"></i>Settings</a></li>
+          <li class="menu-span"><a href="sing-up.html"><i class="fa fa-cog" aria-hidden="true"></i>Sign up to drive</a></li>
         </ul>
       </nav>
     </div>
-        <div class="col-xs-offset-12 col-xs-5">
-          <button class="edit">Edit profile</button>
-        </div>
-      </div>
-  </section> 
+        <section class="form-container">
+      <div class="container-fluid">
+        <div id="planetas">
+          <form id="avatar">
+            <img src="images/profile-default.jpg" alt="" style="height: 253px; width: 253px; margin-left: 17px">
+            <input type="file" id="cambiarAvatar" value="edit" class="cambio">
+            <input type="submit" class="btn btn-primary" value="Guardar" class=""></input>
+          </form>
+  </section>
   <section>
     <div class="row">
       <div class="col-xs-12 col-md-12 col-sm-12 text-center">
@@ -56,6 +58,7 @@
   </section>
 
   <script type="text/javascript" src='js/jquery-3.1.1.js'></script>
+  <script type="text/javascript" src="js/avatar.js"></script>
   <script type='text/javascript' src='js/main.js'></script>
 </body>
 </html>

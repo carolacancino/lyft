@@ -18,7 +18,7 @@
 			</div>
 			<nav>
 				<ul>
-					
+
 					<li class="menu-span text-center"><a href="map_1.html"><i class="fa fa-times" aria-hidden="true"></i><input type="button" onclick="close()"></a><a href="profile.html"><img class="defaul-small2 text-center" src="images/profile-default.jpg"><p>Carola</p>
 					</a></li>
 					<li class="menu-span"><a href="index.html"><i class="fa fa-map-marker" aria-hidden="true"></i>Home</a></li>
@@ -35,9 +35,9 @@
 			</div>
 			<div class="col-xs-offset-12 col-xs-5 col-md-offset-12 col-md-5 arriba2">
 				<img class="present-img" src="images/gift_present_4237.png">
-			</div>	
+			</div>
 		</div>
-		<div id='ubicacion'></div>
+		<!--<div id='ubicacion'></div>
 		<script type="text/javascript">
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(mostrarUbicacion);
@@ -46,18 +46,16 @@
 				var times = position.timestamp;
 				var latitud = position.coords.latitude;
 				var longitud = position.coords.longitude;
-				var altitud = position.coords.altitude;	
-				var exactitud = position.coords.accuracy;	
+				var altitud = position.coords.altitude;
+				var exactitud = position.coords.accuracy;
 				var div = document.getElementById("ubicacion");
 
-				function refrescarUbicacion() {	
-					navigator.geolocation.watchPosition(mostrarUbicacion);}	
+				function refrescarUbicacion() {
+					navigator.geolocation.watchPosition(mostrarUbicacion);}
 				</script>
-				<!-- Se escribe un mapa con la localizacion anterior-->
 				<div id="demo"></div>
 				<div id="mapholder"></div>
 				<script src="https://maps.google.com/maps/api/js?sensor=false"></script>
-				<!--<button onclick="cargarmap()">Cargar mapa</button>-->
 				<script type="text/javascript">
 					var x=document.getElementById("demo");
 					function cargarmap(){
@@ -79,7 +77,7 @@
 							var marker=new google.maps.Marker({position:latlon,map:map,title:"You are here!"});
 						}
 						function showError(error){
-							switch(error.code) 
+							switch(error.code)
 							{
 								case error.PERMISSION_DENIED:
 								x.innerHTML="Denegada la peticion de Geolocalización en el navegador."
@@ -97,14 +95,27 @@
 						}
 					}
 					cargarmap();
-				</script>
-
-				<footer>
+				</script>-->
+				<div class="">
+					<div id="panel">
+						<div class="row">
+							<div class="col-xs-8 col-md-4" >
+								<input type="text" id="start" value="" placeholder="ORIGEN" class="input" />
+								<input type="text" id="end" value="" placeholder="DESTINO" class="input"/>
+								<input type="button" id="submit" value="Buscar" class="input" />
+							</div>
+						</div>
+					</div>
+					<div id="map-canvas">
+					</div>
+				</div><!--END HOME SECTION-->
+				<!--<footer>
 					<input type="text" name="ubication" class="input-ubica">
 					<p class="text-center"><button class="pickup"> Set pickup</button></p>
 				</footer>
-			</div>
+			</div>-->
 			<script type="text/javascript" src='js/jquery-3.1.1.js'></script>
+			<script src='http://maps.googleapis.com/maps/api/js?sensor=false'></script>
 			<script type='text/javascript' src='js/map_1.js'></script>
 		</body>
 		</html>
