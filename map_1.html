@@ -1,4 +1,5 @@
-<html lang="es">
+<!DOCTYPE html>
+<html class="http://maps.googleapis.com/maps/api/js?sensor=false">
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,7 +8,7 @@
 	<link rel="icon" type="image/ico" href="images/favicon.png">
 	<link rel="stylesheet" type="text/css" href="font/css/font-awesome.min.css">
 	<link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-	<link href="https://fonts.googleapis.com/css?family=Prompt:200,300,400,500" rel="stylesheet">
+	<!--<link href="https://fonts.googleapis.com/css?family=Prompt:200,300,400,500" rel="stylesheet">-->
 	<link rel="stylesheet" href="css/map_1.css">
 </head>
 <body>
@@ -37,7 +38,7 @@
 				<img class="present-img" src="images/gift_present_4237.png">
 			</div>
 		</div>
-		<!--<div id='ubicacion'></div>
+		<div id='ubicacion'></div>
 		<script type="text/javascript">
 			if (navigator.geolocation) {
 				navigator.geolocation.getCurrentPosition(mostrarUbicacion);
@@ -95,25 +96,13 @@
 						}
 					}
 					cargarmap();
-				</script>-->
-				<div class="">
-					<div id="panel">
-						<div class="row">
-							<div class="col-xs-8 col-md-4" >
-								<input type="text" id="start" value="" placeholder="ORIGEN" class="input" />
-								<input type="text" id="end" value="" placeholder="DESTINO" class="input"/>
-								<input type="button" id="submit" value="Buscar" class="input" />
-							</div>
-						</div>
-					</div>
-					<div id="map-canvas">
-					</div>
-				</div><!--END HOME SECTION-->
-				<!--<footer>
+				</script>
+				<!--END HOME SECTION-->
+				<footer>
 					<input type="text" name="ubication" class="input-ubica">
 					<p class="text-center"><button class="pickup"> Set pickup</button></p>
 				</footer>
-			</div>-->
+			</div>
 			<script type="text/javascript" src='js/jquery-3.1.1.js'></script>
 			<script src='http://maps.googleapis.com/maps/api/js?sensor=false'></script>
 			<script type='text/javascript' src='js/map_1.js'></script>

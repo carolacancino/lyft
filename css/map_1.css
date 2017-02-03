@@ -9,13 +9,13 @@
     padding: 5px;
     background-color: white;
 }
-#panel{
-	margin-top: 529px;
-    margin-left: 63px;
+.input-ubica{
+	width: 290px;
+    margin-left: 42px;
+    margin-bottom: 10px;
 }
-#submit{
+.pickup{
 	background-color: #A1A1A3;
-	border-radius: 10px;
 	width: 290px;
 	color: white;
 	padding: 10px;
